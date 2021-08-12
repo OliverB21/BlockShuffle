@@ -1,0 +1,7 @@
+name: BlockShuffle
+version: @version@
+main: tech.reisu1337.blockshuffle.BlockShuffle
+api-version: 1.17
+authors: [ Reisu1337 ]
+description: A simple Block Shuffle game for Minecraft 1.17.1
+website: reisu1337.tech
