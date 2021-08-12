@@ -11,6 +11,8 @@ import java.io.File;
 public final class BlockShuffle extends JavaPlugin {
     private File settingsFile;
     private String startMessage;
+    private String startError;
+    private boolean inProgress;
 
     @Override
     public void onEnable() {
@@ -19,7 +21,8 @@ public final class BlockShuffle extends JavaPlugin {
 
         YamlConfiguration settings = YamlConfiguration.loadConfiguration(this.settingsFile);
         this.startMessage = settings.getString("start");
-        this.getCommand("startblockshuffle").setExecutor(new GameStartCommand(this.startMessage));
+        this.startError = settings.getString("starterror");
+        this.getCommand("startblockshuffle").setExecutor(new GameStartCommand(this.startMessage, this, this.startError));
 
     }
 
@@ -33,4 +36,13 @@ public final class BlockShuffle extends JavaPlugin {
             this.saveResource("settings.yml", false);
         }
     }
+
+    public boolean isInProgress() {
+        return this.inProgress;
+    }
+
+    public void setInProgress(boolean inProgress) {
+        this.inProgress = inProgress;
+    }
+
 }
