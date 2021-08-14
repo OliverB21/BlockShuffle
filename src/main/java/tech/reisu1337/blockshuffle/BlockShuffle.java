@@ -1,18 +1,15 @@
 package tech.reisu1337.blockshuffle;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Steerable;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.yaml.snakeyaml.Yaml;
 import tech.reisu1337.blockshuffle.commands.GameStartCommand;
 import tech.reisu1337.blockshuffle.events.PlayerListener;
 
 import java.io.File;
+import java.util.Objects;
 
 public final class BlockShuffle extends JavaPlugin {
     private File settingsFile;
-    private String startMessage;
-    private String startError;
     private boolean inProgress;
 
     @Override
@@ -23,9 +20,9 @@ public final class BlockShuffle extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
         YamlConfiguration settings = YamlConfiguration.loadConfiguration(this.settingsFile);
-        this.startMessage = settings.getString("start");
-        this.startError = settings.getString("starterror");
-        this.getCommand("startblockshuffle").setExecutor(new GameStartCommand(this.startMessage, this, this.startError));
+        String startMessage = settings.getString("start");
+        String startError = settings.getString("starterror");
+        Objects.requireNonNull(this.getCommand("startblockshuffle")).setExecutor(new GameStartCommand(startMessage, this, startError));
 
     }
 
