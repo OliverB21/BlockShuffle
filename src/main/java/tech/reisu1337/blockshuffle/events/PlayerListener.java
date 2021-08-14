@@ -1,5 +1,6 @@
 package tech.reisu1337.blockshuffle.events;
 
+//import org.apache.commons.lang.WordUtils;
 //import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -23,8 +24,11 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
-        String playerOnBlock = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getAsString();
-        //Bukkit.broadcastMessage(playerOnBlock);
+        String playerOnBlock = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getMaterial().toString();
+        //playerOnBlock = playerOnBlock.replaceAll("_", " ");
+        //playerOnBlock = WordUtils.swapCase(playerOnBlock).toLowerCase(Locale.ROOT);
+        //playerOnBlock = WordUtils.capitalize(playerOnBlock);
+        //Bukkit.broadcastMessage(event.getPlayer().getName() + " is stood on " + playerOnBlock);
     }
 
     public Map<UUID, Material> getUserMaterialMap() {
