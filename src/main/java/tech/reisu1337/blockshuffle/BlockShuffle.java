@@ -17,12 +17,14 @@ public final class BlockShuffle extends JavaPlugin {
         this.settingsFile = this.getDataFolder().toPath().resolve("settings.yml").toFile();
         this.createSettingsFile();
 
-        this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-
         YamlConfiguration settings = YamlConfiguration.loadConfiguration(this.settingsFile);
+
+        PlayerListener playerListener = new PlayerListener(settings, this);
+        this.getServer().getPluginManager().registerEvents(playerListener, this);
+
         String startMessage = settings.getString("start");
         String startError = settings.getString("starterror");
-        Objects.requireNonNull(this.getCommand("startblockshuffle")).setExecutor(new GameStartCommand(startMessage, this, startError));
+        this.getCommand("startblockshuffle").setExecutor(new GameStartCommand(playerListener, startMessage, this, startError));
 
     }
 

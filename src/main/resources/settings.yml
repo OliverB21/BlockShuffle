@@ -1,2 +1,8 @@
 start: The Block Shuffle game has begun!
 starterror: The game is already in progress!
+materials:
+  - GRASS_BLOCK
+  - DIRT
+  - COBBLESTONE
+  - ANVIL
+  - STONE
