@@ -2,12 +2,14 @@ package tech.reisu1337.blockshuffle.events;
 
 //import org.apache.commons.lang.WordUtils;
 //import org.bukkit.Bukkit;
+
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,10 @@ public class PlayerListener implements Listener {
         userMaterialMap.put(event.getPlayer().getUniqueId(), event.getPlayer().getLocation().getBlock().getBlockData().getMaterial());
     }
 
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        event.setQuitMessage("See you soon, " + event.getPlayer().getName());
+    }
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
         String playerOnBlock = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getMaterial().toString();
