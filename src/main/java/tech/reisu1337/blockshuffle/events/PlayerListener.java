@@ -1,8 +1,8 @@
 package tech.reisu1337.blockshuffle.events;
 
 //import org.apache.commons.lang.WordUtils;
-//import org.bukkit.Bukkit;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -32,8 +32,11 @@ public class PlayerListener implements Listener {
         plugin.setRoundWon(false);
         for (Player player : Bukkit.getOnlinePlayers()) {
             Material randomBlock = this.getRandomMaterial();
+            String playerOnBlock2 = randomBlock.toString().replaceAll("_", " ");
+            playerOnBlock2 = WordUtils.swapCase(playerOnBlock2).toLowerCase(Locale.ROOT);
+            playerOnBlock2 = WordUtils.capitalize(playerOnBlock2);
             this.userMaterialMap.put(player.getUniqueId(), randomBlock);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + player.getName() + "&f, you need to stand on &d" + randomBlock.toString()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + player.getName() + "&f, you need to stand on &d" + playerOnBlock2));
         }
     }
 
@@ -56,9 +59,9 @@ public class PlayerListener implements Listener {
                 this.plugin.setInProgress(false);
             }
         }
-        //playerOnBlock = playerOnBlock.replaceAll("_", " ");
-        //playerOnBlock = WordUtils.swapCase(playerOnBlock).toLowerCase(Locale.ROOT);
-        //playerOnBlock = WordUtils.capitalize(playerOnBlock);
+        //playerOnBlock2 = playerOnBlock.replaceAll("_", " ");
+        //playerOnBlock2 = WordUtils.swapCase(playerOnBlock2).toLowerCase(Locale.ROOT);
+        //playerOnBlock2 = WordUtils.capitalize(playerOnBlock2);
         //Bukkit.broadcastMessage(event.getPlayer().getName() + " is stood on " + playerOnBlock);
     }
 
