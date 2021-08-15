@@ -4,6 +4,7 @@ package tech.reisu1337.blockshuffle.events;
 //import org.bukkit.Bukkit;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,10 +29,11 @@ public class PlayerListener implements Listener {
     }
 
     public void startGame() {
+        plugin.setRoundWon(false);
         for (Player player : Bukkit.getOnlinePlayers()) {
             Material randomBlock = this.getRandomMaterial();
             this.userMaterialMap.put(player.getUniqueId(), randomBlock);
-            player.sendMessage(player.getName() + ", you need to stand on " + randomBlock.toString());
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + player.getName() + "&f, you need to stand on &d" + randomBlock.toString()));
         }
     }
 
@@ -43,9 +45,12 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        Material playerOnBlock = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getMaterial();
-        if (this.userMaterialMap.get(event.getPlayer().getUniqueId()) == playerOnBlock) {
-            player.sendMessage(player.getName() + ", you stood on " + playerOnBlock.toString());
+        Material playerOnBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getMaterial();
+        if (this.userMaterialMap.get(player.getUniqueId()) == playerOnBlock) {
+            if (!this.plugin.isRoundWon()) {
+                plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&2" + player.getName() + "&f has won!"));
+                plugin.setRoundWon(true);
+            }
             this.userMaterialMap.remove(event.getPlayer().getUniqueId());
             if (this.userMaterialMap.size() == 0) {
                 this.plugin.setInProgress(false);

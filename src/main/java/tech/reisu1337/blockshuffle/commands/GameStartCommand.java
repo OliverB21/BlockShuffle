@@ -28,9 +28,9 @@ public class GameStartCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equals("startblockshuffle")) {
             if (this.plugin.isInProgress()) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4" + this.startError));
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + this.startError));
             } else {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + this.startMessage));
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&2" + this.startMessage));
                 this.playerListener.startGame();
                 this.plugin.setInProgress(true);
             }

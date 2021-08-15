@@ -11,6 +11,7 @@ import java.util.Objects;
 public final class BlockShuffle extends JavaPlugin {
     private File settingsFile;
     private boolean inProgress;
+    private boolean roundWon = false;
 
     @Override
     public void onEnable() {
@@ -47,4 +48,12 @@ public final class BlockShuffle extends JavaPlugin {
         this.inProgress = inProgress;
     }
 
+
+    public boolean isRoundWon() {
+        return this.roundWon;
+    }
+
+    public void setRoundWon(boolean roundWon) {
+        this.roundWon = roundWon;
+    }
 }
