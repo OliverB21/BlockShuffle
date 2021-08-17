@@ -24,7 +24,7 @@ public class PlayerListener implements Listener {
     private final Random random = new Random();
     private final List<Material> materials;
     private final BlockShuffle plugin;
-    private int ticksInRound = 600;
+    private int ticksInRound = 6000;
     private int scheduledTask;
 
     public PlayerListener(YamlConfiguration settings, BlockShuffle plugin) {
@@ -41,10 +41,10 @@ public class PlayerListener implements Listener {
     }
 
     private void nextRound() {
-        if (this.ticksInRound != 600) {
+        if (this.ticksInRound != 6000) {
             if (this.completedUsers.size() == 0) {
                 Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> &f" +createWinnerMessage()));
-                this.ticksInRound = 600;
+                this.ticksInRound = 6000;
                 this.userMaterialMap.clear();
                 this.usersInGame.clear();
                 this.plugin.setInProgress(false);
@@ -71,7 +71,7 @@ public class PlayerListener implements Listener {
         this.scheduledTask = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, ()->{
             this.nextRound();
         }, this.ticksInRound);
-        this.ticksInRound -= 300;
+        this.ticksInRound -= 600;
     }
 
     private String createWinnerMessage() {
