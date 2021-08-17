@@ -43,7 +43,7 @@ public class PlayerListener implements Listener {
     private void nextRound() {
         if (this.ticksInRound != 600) {
             if (this.completedUsers.size() == 0) {
-                Bukkit.broadcastMessage(createWinnerMessage());
+                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> &f" +createWinnerMessage()));
                 this.ticksInRound = 600;
                 this.userMaterialMap.clear();
                 this.usersInGame.clear();
@@ -53,7 +53,7 @@ public class PlayerListener implements Listener {
                 for (UUID uuid : this.usersInGame) {
                     if (!this.completedUsers.contains(uuid)) {
                         usersInGame.remove(uuid);
-                        Bukkit.getPlayer(uuid).sendMessage("You failed haha lol");
+                        Bukkit.getPlayer(uuid).sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + Bukkit.getPlayer(uuid).getName() + ",&f you have been knocked out!"));
                     }
                 }
             }
