@@ -7,7 +7,5 @@ description: A simple Block Shuffle game for Minecraft 1.17.1
 website: reisu1337.tech
 
 commands:
-  startblockshuffle:
-    description: This command begins the Block Shuffle game
-    aliases:
-      - sbs
+  blockshuffle:
+    description: ""

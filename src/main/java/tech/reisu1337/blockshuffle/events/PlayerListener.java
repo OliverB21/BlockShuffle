@@ -11,10 +11,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import tech.reisu1337.blockshuffle.BlockShuffle;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class PlayerListener implements Listener {
@@ -40,14 +42,19 @@ public class PlayerListener implements Listener {
         this.nextRound();
     }
 
+    public void resetGame() {
+        this.ticksInRound = 6000;
+        this.userMaterialMap.clear();
+        this.usersInGame.clear();
+        this.plugin.setInProgress(false);
+
+    }
+
     private void nextRound() {
         if (this.ticksInRound != 6000) {
             if (this.completedUsers.size() == 0) {
                 Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> &f" +createWinnerMessage()));
-                this.ticksInRound = 6000;
-                this.userMaterialMap.clear();
-                this.usersInGame.clear();
-                this.plugin.setInProgress(false);
+                this.resetGame();
                 return;
             } else {
                 for (UUID uuid : this.usersInGame) {
@@ -66,6 +73,7 @@ public class PlayerListener implements Listener {
             playerOnBlock2 = WordUtils.swapCase(playerOnBlock2).toLowerCase(Locale.ROOT);
             playerOnBlock2 = WordUtils.capitalize(playerOnBlock2);
             this.userMaterialMap.put(uuid, randomBlock);
+            BlockShuffle.LOGGER.log(Level.INFO, player.getName() + " got " + playerOnBlock2);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + player.getName() + ",&f you have " + this.ticksInRound / 1200 + " mins to stand on &d" + playerOnBlock2));
         }
         this.scheduledTask = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, ()->{
@@ -106,10 +114,19 @@ public class PlayerListener implements Listener {
                 this.nextRound();
             }
         }
-        //playerOnBlock2 = playerOnBlock.replaceAll("_", " ");
-        //playerOnBlock2 = WordUtils.swapCase(playerOnBlock2).toLowerCase(Locale.ROOT);
-        //playerOnBlock2 = WordUtils.capitalize(playerOnBlock2);
-        //Bukkit.broadcastMessage(event.getPlayer().getName() + " is stood on " + playerOnBlock);
+    }
+
+    @EventHandler
+    public void onPlayerQuitEvent(PlayerQuitEvent event) {
+        UUID playerUUID = event.getPlayer().getUniqueId();
+        if (this.usersInGame.contains(playerUUID)) {
+            this.usersInGame.remove(playerUUID);
+            this.completedUsers.remove(playerUUID);
+            if (this.usersInGame.size() == 0) {
+                Bukkit.getScheduler().cancelTask(this.scheduledTask);
+                this.resetGame();
+            }
+        }
     }
 
     public Map<UUID, Material> getUserMaterialMap() {

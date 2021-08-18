@@ -1,5 +1,7 @@
 start: The Block Shuffle game has begun!
 starterror: The game is already in progress!
+stopgame: The Block Shuffle game has been ended!
+stoperror: No Block Shuffle game running!
 materials:
   - ACACIA_DOOR
   - ACACIA_FENCE
