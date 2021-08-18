@@ -1,5 +1,5 @@
 name: BlockShuffle
-version: 0.2
+version: 1.0
 main: tech.reisu1337.blockshuffle.BlockShuffle
 api-version: 1.17
 authors: [ Reisu1337 ]

@@ -10,7 +10,6 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Boss;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,12 +30,10 @@ public class PlayerListener implements Listener {
     private final List<Material> materials;
     private final BlockShuffle plugin;
     private int ticksInRound = 6000;
-    private final int ticksPerSecond = 20;
-    private int countdownTask;
-    private int scheduledTask;
+    private int bossBarTask;
+    private int roundEndTask;
     private BossBar bossBar;
-    private double progress = 1.0;
-    private double time;
+    private long roundStartTime;
 
     public PlayerListener(YamlConfiguration settings, BlockShuffle plugin) {
         this.materials = settings.getStringList("materials").stream().map(Material::getMaterial).collect(Collectors.toList());
@@ -50,21 +47,25 @@ public class PlayerListener implements Listener {
         }
         this.bossBar = this.createBossBar();
         this.nextRound();
+        this.bossBarTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, this::updateBossBar, 0, 20);
     }
 
     public void resetGame() {
         this.ticksInRound = 6000;
         this.userMaterialMap.clear();
         this.usersInGame.clear();
+        this.completedUsers.clear();
         this.plugin.setInProgress(false);
+        this.bossBar.removeAll();
+        Bukkit.getScheduler().cancelTask(this.roundEndTask);
+        Bukkit.getScheduler().cancelTask(this.bossBarTask);
     }
 
     private void nextRound() {
         if (this.ticksInRound != 6000) {
             if (this.completedUsers.size() <= 1) {
-                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> &f" + createWinnerMessage()));
+                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> &f" + this.createWinnerMessage()));
                 this.resetGame();
-                this.resetBossBar();
                 return;
             } else {
                 for (UUID uuid : this.usersInGame) {
@@ -75,9 +76,9 @@ public class PlayerListener implements Listener {
                 }
             }
             this.completedUsers.clear();
-            this.resetBossBar();
         }
         this.bossBar.setVisible(true);
+        this.roundStartTime = System.currentTimeMillis();
         for (UUID uuid : this.usersInGame) {
             Player player = Bukkit.getPlayer(uuid);
             Material randomBlock = this.getRandomMaterial();
@@ -88,16 +89,21 @@ public class PlayerListener implements Listener {
             BlockShuffle.LOGGER.log(Level.INFO, player.getName() + " got " + playerOnBlock2);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + player.getName() + ",&f you have " + this.ticksInRound / 1200 + " mins to stand on &d" + playerOnBlock2));
         }
-        this.scheduledTask = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, this::nextRound, this.ticksInRound);
-        this.countdownTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, this::decreaseBossBar, 0, 20);
+        this.roundEndTask = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, this::nextRound, this.ticksInRound);
         this.ticksInRound -= 600;
     }
 
     private String createWinnerMessage() {
         //The game is over! The winner(s) are A, B, C etc
         StringJoiner stringJoiner = new StringJoiner(", ", "The game is over, the winners are: ", "!");
-        for (UUID uuid : this.usersInGame) {
-            stringJoiner.add(Bukkit.getPlayer(uuid).getName());
+        if (this.completedUsers.size() > 0) {
+            for (UUID uuid : this.completedUsers) {
+                stringJoiner.add(Bukkit.getPlayer(uuid).getName());
+            }
+        } else {
+            for (UUID uuid : this.usersInGame) {
+                stringJoiner.add(Bukkit.getPlayer(uuid).getName());
+            }
         }
         return stringJoiner.toString();
     }
@@ -111,17 +117,15 @@ public class PlayerListener implements Listener {
         return bossBar;
     }
 
-    private void decreaseBossBar() {
-        this.time = 1.0 / (this.ticksInRound/this.ticksPerSecond);
-        this.bossBar.setProgress(this.progress);
-        this.progress = this.progress - this.time;
-    }
+    private void updateBossBar() {
+        long timeSinceRoundStart = System.currentTimeMillis() - this.roundStartTime;
+        long millisInRound = ((this.ticksInRound + 600) / 20) * 1000;
+        long millisRemaining = millisInRound - timeSinceRoundStart;
 
-    private void resetBossBar() {
-        this.bossBar.setVisible(false);
-        Bukkit.getScheduler().cancelTask(countdownTask);
-        this.progress = 1;
-        this.bossBar.setProgress(this.progress);
+        double progress = millisRemaining / (double) millisInRound;
+
+        this.bossBar.setProgress(progress);
+        this.bossBar.setTitle("Time Remaining in BlockShuffle Round: " + millisRemaining / 1000 + "secs");
     }
 
     private Material getRandomMaterial() {
@@ -143,8 +147,7 @@ public class PlayerListener implements Listener {
                 this.plugin.setInProgress(false);
             }
             if (this.completedUsers.size() == this.usersInGame.size()) {
-                Bukkit.getScheduler().cancelTask(this.scheduledTask);
-                this.resetBossBar();
+                Bukkit.getScheduler().cancelTask(this.roundEndTask);
                 this.nextRound();
             }
         }
@@ -157,9 +160,6 @@ public class PlayerListener implements Listener {
             this.usersInGame.remove(playerUUID);
             this.completedUsers.remove(playerUUID);
             if (this.usersInGame.size() == 0) {
-                Bukkit.getScheduler().cancelTask(this.scheduledTask);
-                Bukkit.getScheduler().cancelTask(this.countdownTask);
-                this.resetBossBar();
                 this.resetGame();
             }
         }
