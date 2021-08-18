@@ -71,6 +71,7 @@ public class PlayerListener implements Listener {
                 for (UUID uuid : this.usersInGame) {
                     if (!this.completedUsers.contains(uuid)) {
                         usersInGame.remove(uuid);
+                        userMaterialMap.remove(uuid);
                         Bukkit.getPlayer(uuid).sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + Bukkit.getPlayer(uuid).getName() + ",&f you have been knocked out!"));
                     }
                 }
