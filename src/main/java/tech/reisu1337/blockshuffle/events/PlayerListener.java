@@ -52,7 +52,7 @@ public class PlayerListener implements Listener {
 
     private void nextRound() {
         if (this.ticksInRound != 6000) {
-            if (this.completedUsers.size() == 0) {
+            if (this.completedUsers.size() <= 1) {
                 Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> &f" +createWinnerMessage()));
                 this.resetGame();
                 return;
@@ -76,9 +76,7 @@ public class PlayerListener implements Listener {
             BlockShuffle.LOGGER.log(Level.INFO, player.getName() + " got " + playerOnBlock2);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + player.getName() + ",&f you have " + this.ticksInRound / 1200 + " mins to stand on &d" + playerOnBlock2));
         }
-        this.scheduledTask = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, ()->{
-            this.nextRound();
-        }, this.ticksInRound);
+        this.scheduledTask = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, this::nextRound, this.ticksInRound);
         this.ticksInRound -= 600;
     }
 
