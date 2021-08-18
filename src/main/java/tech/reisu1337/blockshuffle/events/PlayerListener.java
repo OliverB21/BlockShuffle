@@ -6,7 +6,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Boss;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,7 +31,12 @@ public class PlayerListener implements Listener {
     private final List<Material> materials;
     private final BlockShuffle plugin;
     private int ticksInRound = 6000;
+    private final int ticksPerSecond = 20;
+    private int countdownTask;
     private int scheduledTask;
+    private BossBar bossBar;
+    private double progress = 1.0;
+    private double time;
 
     public PlayerListener(YamlConfiguration settings, BlockShuffle plugin) {
         this.materials = settings.getStringList("materials").stream().map(Material::getMaterial).collect(Collectors.toList());
@@ -39,6 +48,7 @@ public class PlayerListener implements Listener {
         for (Player player : Bukkit.getOnlinePlayers()) {
             this.usersInGame.add(player.getUniqueId());
         }
+        this.bossBar = this.createBossBar();
         this.nextRound();
     }
 
@@ -47,14 +57,14 @@ public class PlayerListener implements Listener {
         this.userMaterialMap.clear();
         this.usersInGame.clear();
         this.plugin.setInProgress(false);
-
     }
 
     private void nextRound() {
         if (this.ticksInRound != 6000) {
             if (this.completedUsers.size() <= 1) {
-                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> &f" +createWinnerMessage()));
+                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> &f" + createWinnerMessage()));
                 this.resetGame();
+                this.resetBossBar();
                 return;
             } else {
                 for (UUID uuid : this.usersInGame) {
@@ -65,7 +75,9 @@ public class PlayerListener implements Listener {
                 }
             }
             this.completedUsers.clear();
+            this.resetBossBar();
         }
+        this.bossBar.setVisible(true);
         for (UUID uuid : this.usersInGame) {
             Player player = Bukkit.getPlayer(uuid);
             Material randomBlock = this.getRandomMaterial();
@@ -77,6 +89,7 @@ public class PlayerListener implements Listener {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + player.getName() + ",&f you have " + this.ticksInRound / 1200 + " mins to stand on &d" + playerOnBlock2));
         }
         this.scheduledTask = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, this::nextRound, this.ticksInRound);
+        this.countdownTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, this::decreaseBossBar, 0, 20);
         this.ticksInRound -= 600;
     }
 
@@ -87,6 +100,28 @@ public class PlayerListener implements Listener {
             stringJoiner.add(Bukkit.getPlayer(uuid).getName());
         }
         return stringJoiner.toString();
+    }
+
+    private BossBar createBossBar() {
+        BossBar bossBar = Bukkit.createBossBar("Time left: ", BarColor.PINK, BarStyle.SOLID);
+        for (UUID uuid : this.usersInGame) {
+            Player player = Bukkit.getPlayer(uuid);
+            bossBar.addPlayer(player);
+        }
+        return bossBar;
+    }
+
+    private void decreaseBossBar() {
+        this.time = 1.0 / (this.ticksInRound/this.ticksPerSecond);
+        this.bossBar.setProgress(this.progress);
+        this.progress = this.progress - this.time;
+    }
+
+    private void resetBossBar() {
+        this.bossBar.setVisible(false);
+        Bukkit.getScheduler().cancelTask(countdownTask);
+        this.progress = 1;
+        this.bossBar.setProgress(this.progress);
     }
 
     private Material getRandomMaterial() {
@@ -109,6 +144,7 @@ public class PlayerListener implements Listener {
             }
             if (this.completedUsers.size() == this.usersInGame.size()) {
                 Bukkit.getScheduler().cancelTask(this.scheduledTask);
+                this.resetBossBar();
                 this.nextRound();
             }
         }
@@ -122,12 +158,10 @@ public class PlayerListener implements Listener {
             this.completedUsers.remove(playerUUID);
             if (this.usersInGame.size() == 0) {
                 Bukkit.getScheduler().cancelTask(this.scheduledTask);
+                Bukkit.getScheduler().cancelTask(this.countdownTask);
+                this.resetBossBar();
                 this.resetGame();
             }
         }
-    }
-
-    public Map<UUID, Material> getUserMaterialMap() {
-        return this.userMaterialMap;
     }
 }

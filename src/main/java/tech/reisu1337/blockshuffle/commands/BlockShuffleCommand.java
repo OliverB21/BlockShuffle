@@ -6,8 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.graalvm.compiler.nodes.cfg.Block;
 import tech.reisu1337.blockshuffle.BlockShuffle;
 import tech.reisu1337.blockshuffle.events.PlayerListener;
 
