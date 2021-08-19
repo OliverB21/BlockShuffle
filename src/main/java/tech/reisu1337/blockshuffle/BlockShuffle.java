@@ -58,3 +58,11 @@ public final class BlockShuffle extends JavaPlugin {
         this.roundWon = roundWon;
     }
 }
+
+/*
+ __ __ __
+|YY|OO|BB|
+|RR|WW|RR|
+|WW|BB|GG|
+ ‾‾ ‾‾ ‾‾
+*/
