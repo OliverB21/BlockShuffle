@@ -34,9 +34,10 @@ public class PlayerListener implements Listener {
     private int roundEndTask;
     private BossBar bossBar;
     private long roundStartTime;
+    private String materialPath;
 
     public PlayerListener(YamlConfiguration settings, BlockShuffle plugin) {
-        this.materials = settings.getStringList("materials").stream().map(Material::getMaterial).collect(Collectors.toList());
+        this.materials = settings.getStringList(materialPath).stream().map(Material::getMaterial).collect(Collectors.toList());
         this.plugin = plugin;
     }
 
@@ -164,5 +165,9 @@ public class PlayerListener implements Listener {
                 this.resetGame();
             }
         }
+    }
+
+    public void setMaterialPath(String materialPath) {
+        this.materialPath = materialPath;
     }
 }
