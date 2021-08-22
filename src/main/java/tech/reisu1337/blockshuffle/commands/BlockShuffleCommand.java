@@ -35,17 +35,21 @@ public class BlockShuffleCommand implements CommandExecutor {
                 return true;
             }
             if (args[0].equalsIgnoreCase("start")) {
-
-                if (args[1].equalsIgnoreCase("colour")) {
-                    this.playerListener.setMaterialPath("colour_materials");
-                } else if (args[1].equalsIgnoreCase("easy")) {
-                    this.playerListener.setMaterialPath("easy_materials");
-                } else if (args[1].equalsIgnoreCase("user")) {
-                    this.playerListener.setMaterialPath("user_materials");
-                } else {
+                if (args.length == 1) {
                     this.playerListener.setMaterialPath("materials");
-                }
+                } else {
 
+                    if (args[1].equalsIgnoreCase("colour")) {
+                        this.playerListener.setMaterialPath("colour_materials");
+                    } else if (args[1].equalsIgnoreCase("easy")) {
+                        this.playerListener.setMaterialPath("easy_materials");
+                    } else if (args[1].equalsIgnoreCase("user")) {
+                        this.playerListener.setMaterialPath("user_materials");
+                    } else if (args[1].equalsIgnoreCase("normal")) {
+                        this.playerListener.setMaterialPath("materials");
+                    }
+
+                }
                 if (this.plugin.isInProgress()) {
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + this.startError));
                 } else {
