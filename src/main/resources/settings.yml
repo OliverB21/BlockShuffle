@@ -487,3 +487,5 @@ easy_materials:
   - SAND
   - GRAVEL
   - COAL_ORE
+user_materials:
+  - GRASS_BLOCK
