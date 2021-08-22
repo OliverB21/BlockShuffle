@@ -27,7 +27,7 @@ public class PlayerListener implements Listener {
     private final Set<UUID> completedUsers = Sets.newConcurrentHashSet();
     private final Set<UUID> usersInGame = Sets.newConcurrentHashSet();
     private final Random random = new Random();
-    private final List<Material> materials;
+    private List<Material> materials;
     private final BlockShuffle plugin;
     private int ticksInRound = 6000;
     private int bossBarTask;
@@ -35,13 +35,15 @@ public class PlayerListener implements Listener {
     private BossBar bossBar;
     private long roundStartTime;
     private String materialPath;
+    private YamlConfiguration settings;
 
     public PlayerListener(YamlConfiguration settings, BlockShuffle plugin) {
-        this.materials = settings.getStringList(materialPath).stream().map(Material::getMaterial).collect(Collectors.toList());
+        this.settings = settings;
         this.plugin = plugin;
     }
 
     public void startGame() {
+        this.materials = this.settings.getStringList(this.materialPath).stream().map(Material::getMaterial).collect(Collectors.toList());
         plugin.setRoundWon(false);
         for (Player player : Bukkit.getOnlinePlayers()) {
             this.usersInGame.add(player.getUniqueId());

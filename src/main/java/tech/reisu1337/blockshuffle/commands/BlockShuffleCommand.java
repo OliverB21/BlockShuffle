@@ -35,6 +35,17 @@ public class BlockShuffleCommand implements CommandExecutor {
                 return true;
             }
             if (args[0].equalsIgnoreCase("start")) {
+
+                if (args[1].equalsIgnoreCase("colour")) {
+                    this.playerListener.setMaterialPath("colour_materials");
+                } else if (args[1].equalsIgnoreCase("easy")) {
+                    this.playerListener.setMaterialPath("easy_materials");
+                } else if (args[1].equalsIgnoreCase("user")) {
+                    this.playerListener.setMaterialPath("user_materials");
+                } else {
+                    this.playerListener.setMaterialPath("materials");
+                }
+
                 if (this.plugin.isInProgress()) {
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + this.startError));
                 } else {
@@ -51,13 +62,6 @@ public class BlockShuffleCommand implements CommandExecutor {
                 }
             } else {
                 sender.sendMessage("To start the game, try /blockshuffle start");
-            }
-            if (args[1].equalsIgnoreCase("colour")) {
-                playerListener.setMaterialPath("colour_materials");
-            } else if (args[1].equalsIgnoreCase("easy")) {
-                playerListener.setMaterialPath("easy_materials");
-            } else {
-                playerListener.setMaterialPath("materials");
             }
         }
         return true;
