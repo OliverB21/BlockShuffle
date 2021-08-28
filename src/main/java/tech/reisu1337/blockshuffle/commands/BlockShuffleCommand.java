@@ -45,6 +45,8 @@ public class BlockShuffleCommand implements CommandExecutor {
                         this.playerListener.setMaterialPath("easy_materials");
                     } else if (args[1].equalsIgnoreCase("user")) {
                         this.playerListener.setMaterialPath("user_materials");
+                    } else if (args[1].equalsIgnoreCase("nether")) {
+                        this.playerListener.setMaterialPath("nether_materials");
                     } else if (args[1].equalsIgnoreCase("normal")) {
                         this.playerListener.setMaterialPath("materials");
                     }
