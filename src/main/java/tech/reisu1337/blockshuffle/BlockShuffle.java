@@ -4,6 +4,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import tech.reisu1337.blockshuffle.commands.BlockShuffleCommand;
 import tech.reisu1337.blockshuffle.events.PlayerListener;
+import tech.reisu1337.blockshuffle.menus.BlockShuffleMenu;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -26,7 +27,8 @@ public final class BlockShuffle extends JavaPlugin {
         PlayerListener playerListener = new PlayerListener(settings, this);
         this.getServer().getPluginManager().registerEvents(playerListener, this);
 
-        this.getCommand("blockshuffle").setExecutor(new BlockShuffleCommand(playerListener, this, settings));
+        this.getCommand("blockshuffle").setExecutor(new BlockShuffleCommand(playerListener, blockShuffleMenu, this, settings));
+
 
     }
 
