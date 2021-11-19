@@ -25,7 +25,9 @@ public final class BlockShuffle extends JavaPlugin {
         YamlConfiguration settings = YamlConfiguration.loadConfiguration(this.settingsFile);
 
         PlayerListener playerListener = new PlayerListener(settings, this);
+        BlockShuffleMenu blockShuffleMenu = new BlockShuffleMenu(playerListener, settings, this);
         this.getServer().getPluginManager().registerEvents(playerListener, this);
+        this.getServer().getPluginManager().registerEvents(blockShuffleMenu, this);
 
         this.getCommand("blockshuffle").setExecutor(new BlockShuffleCommand(playerListener, blockShuffleMenu, this, settings));
 

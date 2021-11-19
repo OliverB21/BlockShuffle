@@ -6,23 +6,25 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import tech.reisu1337.blockshuffle.BlockShuffle;
 import tech.reisu1337.blockshuffle.events.PlayerListener;
+import tech.reisu1337.blockshuffle.menus.BlockShuffleMenu;
 
 public class BlockShuffleCommand implements CommandExecutor {
-    private final String startMessage;
-    private final String startError;
     private final String stopGame;
     private final String stopError;
+
     private final PlayerListener playerListener;
+    private final BlockShuffleMenu blockShuffleMenu;
     private final BlockShuffle plugin;
 
-    public BlockShuffleCommand(PlayerListener playerListener, BlockShuffle plugin, YamlConfiguration settings) {
-        this.startMessage = settings.getString("start");
-        this.startError = settings.getString("starterror");
+    public BlockShuffleCommand(PlayerListener playerListener, BlockShuffleMenu blockShuffleMenu, BlockShuffle plugin, YamlConfiguration settings) {
         this.stopGame = settings.getString("stopgame");
         this.stopError = settings.getString("stoperror");
+
         this.playerListener = playerListener;
+        this.blockShuffleMenu = blockShuffleMenu;
         this.plugin = plugin;
     }
 
@@ -30,35 +32,13 @@ public class BlockShuffleCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equals("blockshuffle")) {
-            if (args.length == 0){
-                sender.sendMessage("To start the game, try /blockshuffle start");
+            if (!(sender instanceof Player)) {
+                sender.sendMessage("you cannot execute this command from console.");
                 return true;
             }
-            if (args[0].equalsIgnoreCase("start")) {
-                if (args.length == 1) {
-                    this.playerListener.setMaterialPath("materials");
-                } else {
-
-                    if (args[1].equalsIgnoreCase("colour")) {
-                        this.playerListener.setMaterialPath("colour_materials");
-                    } else if (args[1].equalsIgnoreCase("easy")) {
-                        this.playerListener.setMaterialPath("easy_materials");
-                    } else if (args[1].equalsIgnoreCase("user")) {
-                        this.playerListener.setMaterialPath("user_materials");
-                    } else if (args[1].equalsIgnoreCase("nether")) {
-                        this.playerListener.setMaterialPath("nether_materials");
-                    } else if (args[1].equalsIgnoreCase("normal")) {
-                        this.playerListener.setMaterialPath("materials");
-                    }
-
-                }
-                if (this.plugin.isInProgress()) {
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + this.startError));
-                } else {
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&2" + this.startMessage));
-                    this.playerListener.startGame();
-                    this.plugin.setInProgress(true);
-                }
+            Player player = (Player) sender;
+            if (args.length == 0) {
+                this.blockShuffleMenu.show(player);
             } else if (args[0].equalsIgnoreCase("stop")) {
                 if (!this.plugin.isInProgress()) {
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + this.stopError));
