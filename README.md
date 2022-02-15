@@ -16,5 +16,5 @@ Block Shuffle is a fun and easy game that you can play with your friends! Initia
 - /blockshuffle stop ends the game early, game will stop automatically if someone wins  
   
 ### Support/Bugs:  
-Support is available via Discorod (Reisu#5169)
+Support is available via Discorod (Reisu#5169)  
 Please report any bugs through a new tickets or under issues
