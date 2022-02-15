@@ -1,7 +1,5 @@
 # BlockShuffle for Spigot
 
-![Discord](https://img.shields.io/discord/802943410313887774?label=Discord&logo=Discord&logoColor=white&style=plastic)
-
 A simple Block Shuffle game for Minecraft 1.17.1
 
 Block Shuffle is a fun and easy game that you can play with your friends! Initially created by Dream and brought to 1.17 by me, enjoy racing against your friends to locate the blocks as fast as you can!
