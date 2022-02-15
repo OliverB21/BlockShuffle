@@ -16,5 +16,5 @@ Block Shuffle is a fun and easy game that you can play with your friends! Initia
 - /blockshuffle stop ends the game early, game will stop automatically if someone wins  
   
 ### Support/Bugs:  
-Support is available on my discord server, linked to the right. Simply go to the create-ticket channel and open a new ticket (https://discord.gg/9B6cWxGFAN)  
+Support is available via Discorod (Reisu#5169)
 Please report any bugs through a new tickets or under issues
