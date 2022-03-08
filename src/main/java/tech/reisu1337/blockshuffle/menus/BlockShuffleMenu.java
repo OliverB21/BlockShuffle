@@ -18,7 +18,7 @@ import tech.reisu1337.blockshuffle.BlockShuffle;
 import tech.reisu1337.blockshuffle.events.PlayerListener;
 
 public class BlockShuffleMenu implements InventoryHolder, Listener {
-    private final Inventory inventory = Bukkit.createInventory(this, InventoryType.HOPPER, "Blockshuffle!");
+    private final Inventory inventory = Bukkit.createInventory(this, 9, "Blockshuffle!");
     private final PlayerListener playerListener;
 
     private final String startMessage;
@@ -57,30 +57,31 @@ public class BlockShuffleMenu implements InventoryHolder, Listener {
         userItemMeta.setDisplayName("Custom Blockshuffle");
         userItem.setItemMeta(userItemMeta);
 
-        this.inventory.addItem(
-                baseItem,
-                simpleItem,
-                netherItem,
-                colourItem,
-                userItem
-        );
+        this.inventory.setItem(2, baseItem);
+        this.inventory.setItem(3, simpleItem);
+        this.inventory.setItem(4, netherItem);
+        this.inventory.setItem(5, colourItem);
+        this.inventory.setItem(6, userItem);
+
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inventory = event.getInventory();
-        if (!(inventory.getHolder() instanceof BlockShuffleMenu))
+
+        if (!(inventory.getHolder() instanceof BlockShuffleMenu)) {
             return;
+        }
 
         event.setCancelled(true);
         int slot = event.getRawSlot();
 
         switch (slot) {
-            case 0 -> this.playerListener.setMaterialPath("materials");
-            case 1 -> this.playerListener.setMaterialPath("simple");
-            case 2 -> this.playerListener.setMaterialPath("nether_materials");
-            case 3 -> this.playerListener.setMaterialPath("colour_materials");
-            case 4 -> this.playerListener.setMaterialPath("user_materials");
+            case 2 -> this.playerListener.setMaterialPath("materials");
+            case 3 -> this.playerListener.setMaterialPath("easy_materials");
+            case 4 -> this.playerListener.setMaterialPath("nether_materials");
+            case 5 -> this.playerListener.setMaterialPath("colour_materials");
+            case 6 -> this.playerListener.setMaterialPath("user_materials");
         }
         Player player = (Player) event.getWhoClicked();
 

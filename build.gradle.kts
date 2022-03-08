@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "tech.reisu1337"
-version = "1.2"
+version = "1.2.2"
 
 repositories {
     mavenCentral()

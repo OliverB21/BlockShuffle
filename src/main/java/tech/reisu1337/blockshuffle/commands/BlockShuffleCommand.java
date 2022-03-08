@@ -47,7 +47,7 @@ public class BlockShuffleCommand implements CommandExecutor {
                     Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&2" + this.stopGame));
                 }
             } else {
-                sender.sendMessage("To start the game, try /blockshuffle start");
+                sender.sendMessage("To start the game, try /blockshuffle");
             }
         }
         return true;

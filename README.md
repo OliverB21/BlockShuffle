@@ -12,7 +12,7 @@ Block Shuffle is a fun and easy game that you can play with your friends! Initia
 - Be careful! The longer the game goes on, the less time you have to find your block!
 
 ### Commands:  
-- /blockshuffle start begins the game
+- /blockshuffle begins the game
 - /blockshuffle stop ends the game early, game will stop automatically if someone wins  
   
 ### Support/Bugs:  
