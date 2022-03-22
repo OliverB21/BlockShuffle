@@ -2,7 +2,7 @@
 
 A simple Block Shuffle game for Minecraft 1.18
 
-Block Shuffle is a fun and easy game that you can play with your friends! Initially created by Dream and brought to 1.17 by me, enjoy racing against your friends to locate the blocks as fast as you can!
+Block Shuffle is a fun and easy game that you can play with your friends! Initially created by Dream and brought to 1.18 by me, enjoy racing against your friends to locate the blocks as fast as you can!
 
 ### How to play:
 - A random block is given to each player in chat
