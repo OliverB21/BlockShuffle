@@ -30,8 +30,6 @@ public final class BlockShuffle extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(blockShuffleMenu, this);
 
         this.getCommand("blockshuffle").setExecutor(new BlockShuffleCommand(playerListener, blockShuffleMenu, this, settings));
-
-
     }
 
     @Override
@@ -52,7 +50,6 @@ public final class BlockShuffle extends JavaPlugin {
     public void setInProgress(boolean inProgress) {
         this.inProgress = inProgress;
     }
-
 
     public boolean isRoundWon() {
         return this.roundWon;

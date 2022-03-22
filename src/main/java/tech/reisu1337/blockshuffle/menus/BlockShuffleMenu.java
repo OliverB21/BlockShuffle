@@ -1,6 +1,5 @@
 package tech.reisu1337.blockshuffle.menus;
 
-import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -62,7 +60,6 @@ public class BlockShuffleMenu implements InventoryHolder, Listener {
         this.inventory.setItem(4, netherItem);
         this.inventory.setItem(5, colourItem);
         this.inventory.setItem(6, userItem);
-
     }
 
     @EventHandler
@@ -86,9 +83,9 @@ public class BlockShuffleMenu implements InventoryHolder, Listener {
         Player player = (Player) event.getWhoClicked();
 
         if (this.plugin.isInProgress()) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&4" + this.startError));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> &4" + this.startError));
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&2" + this.startMessage));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> &2" + this.startMessage));
             this.playerListener.startGame();
             this.plugin.setInProgress(true);
         }
