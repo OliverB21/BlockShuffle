@@ -28,15 +28,13 @@ public class BlockShuffleCommand implements CommandExecutor {
         this.plugin = plugin;
     }
 
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equals("blockshuffle")) {
-            if (!(sender instanceof Player)) {
+            if (!(sender instanceof Player player)) {
                 sender.sendMessage("you cannot execute this command from console.");
                 return true;
             }
-            Player player = (Player) sender;
             if (args.length == 0) {
                 this.blockShuffleMenu.show(player);
             } else if (args[0].equalsIgnoreCase("stop")) {

@@ -17,7 +17,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import tech.reisu1337.blockshuffle.BlockShuffle;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.StringJoiner;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -27,15 +33,16 @@ public class PlayerListener implements Listener {
     private final Set<UUID> completedUsers = Sets.newConcurrentHashSet();
     private final Set<UUID> usersInGame = Sets.newConcurrentHashSet();
     private final Random random = new Random();
-    private List<Material> materials;
     private final BlockShuffle plugin;
+    private final YamlConfiguration settings;
+
+    private List<Material> materials;
     private int ticksInRound = 6000;
     private int bossBarTask;
     private int roundEndTask;
     private BossBar bossBar;
     private long roundStartTime;
     private String materialPath;
-    private YamlConfiguration settings;
 
     public PlayerListener(YamlConfiguration settings, BlockShuffle plugin) {
         this.settings = settings;
@@ -123,7 +130,7 @@ public class PlayerListener implements Listener {
 
     private void updateBossBar() {
         long timeSinceRoundStart = System.currentTimeMillis() - this.roundStartTime;
-        long millisInRound = ((this.ticksInRound + 600) / 20) * 1000;
+        long millisInRound = ((this.ticksInRound + 600) / 20) * 1000L;
         long millisRemaining = millisInRound - timeSinceRoundStart;
 
         double progress = millisRemaining / (double) millisInRound;
@@ -140,10 +147,10 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        Material playerOnBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getMaterial();
-        if (this.userMaterialMap.get(player.getUniqueId()) == playerOnBlock) {
+        Material materialBelow = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getBlockData().getMaterial();
+        if (this.userMaterialMap.get(player.getUniqueId()) == materialBelow) {
             if (!this.plugin.isRoundWon()) {
-                plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&2" + player.getName() + "&f has found their block!"));
+                this.plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6<BlockShuffle> " + "&2" + player.getName() + "&f has found their block!"));
                 this.completedUsers.add(player.getUniqueId());
             }
             this.userMaterialMap.remove(event.getPlayer().getUniqueId());
@@ -160,8 +167,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         UUID playerUUID = event.getPlayer().getUniqueId();
-        if (this.usersInGame.contains(playerUUID)) {
-            this.usersInGame.remove(playerUUID);
+        if (this.usersInGame.remove(playerUUID)) {
             this.completedUsers.remove(playerUUID);
             if (this.usersInGame.size() == 0) {
                 this.resetGame();
