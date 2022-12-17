@@ -9,3 +9,7 @@ website: reisu1337.tech
 commands:
   blockshuffle:
     description: ""
+
+permissions:
+  blockshuffle.admin:
+    default: op

@@ -35,6 +35,10 @@ public class BlockShuffleCommand implements CommandExecutor {
                 sender.sendMessage("you cannot execute this command from console.");
                 return true;
             }
+            if (!player.hasPermission("blockshuffle.admin")) {
+                player.sendMessage(ChatColor.RED + "you do not have permission to execute this command.");
+                return true;
+            }
             if (args.length == 0) {
                 this.blockShuffleMenu.show(player);
             } else if (args[0].equalsIgnoreCase("stop")) {
