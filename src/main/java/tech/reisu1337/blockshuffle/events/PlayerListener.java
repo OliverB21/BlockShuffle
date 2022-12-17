@@ -140,7 +140,7 @@ public class PlayerListener implements Listener {
     }
 
     private Material getRandomMaterial() {
-        int randomIndex = this.random.nextInt(this.materials.size() - 1);
+        int randomIndex = this.random.nextInt(this.materials.size());
         return this.materials.get(randomIndex);
     }
 
